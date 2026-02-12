@@ -34,6 +34,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/drive/{connection}/upload', [DriveController::class, 'upload'])->name('drive.upload');
     Route::post('/drive/{connection}/items/{itemId}/rename', [DriveController::class, 'renameItem'])->name('drive.items.rename');
     Route::post('/drive/{connection}/items/{itemId}/trash', [DriveController::class, 'trashItem'])->name('drive.items.trash');
+    Route::post('/drive/{connection}/items/bulk-trash', [DriveController::class, 'bulkTrashItems'])->name('drive.items.bulk_trash');
+    Route::get('/drive/{connection}/items/{itemId}/preview', [DriveController::class, 'preview'])->name('drive.items.preview');
     Route::get('/drive/{connection}/items/{itemId}/download', [DriveController::class, 'download'])->name('drive.items.download');
 
     Route::get('/connections/google', [GoogleConnectionsController::class, 'index'])->name('connections.google.index');

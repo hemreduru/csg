@@ -7,14 +7,28 @@ return [
 
     'connections' => [
         'title' => 'Google Accounts',
+        'page_title' => 'Google Accounts',
         'add' => 'Add Google Account',
         'set_default' => 'Set Default',
         'disconnect' => 'Disconnect',
+        'open_drive' => 'Open Drive',
         'rename' => 'Rename',
         'name' => 'Name',
         'email' => 'Email',
         'status' => 'Status',
+        'search_placeholder' => 'Search connected accounts',
+        'no_results' => 'No connected account matches your search.',
         'default_badge' => 'Default',
+        'breadcrumbs' => [
+            'home' => 'Home',
+            'section' => 'Google Accounts',
+        ],
+        'summary' => [
+            'title' => 'Google Account Connections',
+            'subtitle' => 'Manage multiple Google accounts and switch between them in Drive.',
+            'connected_count' => '{1} :count connected account|[2,*] :count connected accounts',
+            'no_default' => 'No default account',
+        ],
         'statuses' => [
             'connected' => 'Connected',
             'revoked' => 'Revoked',
@@ -32,7 +46,10 @@ return [
 
     'browse' => [
         'title' => 'Drive',
+        'page_title' => 'File Manager - Folders',
+        'manager_title' => 'File Manager',
         'empty' => 'This folder is empty.',
+        'no_results' => 'No files or folders match your search.',
         'back' => 'Back',
         'folder' => 'Folder',
         'file' => 'File',
@@ -49,12 +66,28 @@ return [
         'choose_file' => 'Choose file',
         'upload_hint' => 'Max file size: 2 MB.',
         'upload_submit' => 'Upload',
+        'preview' => 'Preview',
         'download' => 'Download',
         'rename' => 'Rename',
         'rename_title' => 'Rename Item',
         'new_name' => 'New name',
         'delete' => 'Delete',
+        'bulk_delete' => 'Delete Selected',
+        'bulk_selected' => 'selected',
         'confirm_delete' => 'Are you sure you want to delete this item?',
+        'confirm_bulk_delete' => 'Are you sure you want to delete selected items?',
+        'search_placeholder' => 'Search files & folders',
+        'root' => 'root',
+        'current_path' => 'Current path',
+        'items_count' => '{1} :count item|[2,*] :count items',
+        'breadcrumbs' => [
+            'home' => 'Home',
+            'file_manager' => 'File Manager',
+        ],
+        'tabs' => [
+            'files' => 'Files',
+            'accounts' => 'Google Accounts',
+        ],
         'na' => 'N/A',
     ],
 
@@ -63,6 +96,8 @@ return [
         'file_uploaded' => 'File uploaded.',
         'item_renamed' => 'Item renamed.',
         'item_trashed' => 'Item moved to trash.',
+        'bulk_items_trashed' => '{1} :count item moved to trash.|[2,*] :count items moved to trash.',
+        'bulk_items_partially_trashed' => '{1} :count item moved to trash. Some items could not be deleted.|[2,*] :count items moved to trash. Some items could not be deleted.',
     ],
 
     'errors' => [
@@ -71,7 +106,10 @@ return [
         'upload_failed' => 'Upload failed. Please try again.',
         'rename_failed' => 'Rename failed. Please try again.',
         'trash_failed' => 'Delete failed. Please try again.',
+        'bulk_trash_failed' => 'Selected items could not be deleted. Please try again.',
         'download_failed' => 'Download failed. Please try again.',
+        'preview_failed' => 'Preview failed. Please try again.',
+        'preview_folder_not_supported' => 'Folders cannot be previewed.',
         'invalid_name' => 'Invalid name. Please try a different name.',
     ],
 ];

@@ -15,6 +15,7 @@ class DriveGateway
 {
     public const EXPORT_MIME_PDF = 'application/pdf';
     public const FOLDER_MIME_TYPE = 'application/vnd.google-apps.folder';
+    public const GOOGLE_APPS_MIME_PREFIX = 'application/vnd.google-apps.';
 
     public function __construct(
         private readonly GoogleDriveClientFactory $factory,
@@ -154,21 +155,39 @@ class DriveGateway
     }
 
     /**
-     * @return array{name: string, mime_type: string, size: int|null}
+     * @return array{
+     *   name: string,
+     *   mime_type: string,
+     *   size: int|null,
+     *   web_view_link: string|null,
+     *   export_links: array<string, string>
+     * }
      */
     public function getMetadata(DriveConnection $connection, string $itemId): array
     {
         $service = $this->factory->makeDriveService($connection);
 
         $file = $service->files->get($itemId, [
-            'fields' => 'id,name,mimeType,size',
+            'fields' => 'id,name,mimeType,size,webViewLink,exportLinks',
             'supportsAllDrives' => true,
         ]);
+
+        $exportLinks = $file->getExportLinks();
+
+        if (! is_array($exportLinks)) {
+            $exportLinks = [];
+        }
+
+        $exportLinks = array_filter($exportLinks, fn (mixed $value, mixed $key) => is_string($key) && is_string($value) && $value !== '', ARRAY_FILTER_USE_BOTH);
+
+        $webViewLink = $file->getWebViewLink();
 
         return [
             'name' => (string) $file->getName(),
             'mime_type' => (string) $file->getMimeType(),
             'size' => $file->getSize() ? (int) $file->getSize() : null,
+            'web_view_link' => is_string($webViewLink) && $webViewLink !== '' ? $webViewLink : null,
+            'export_links' => $exportLinks,
         ];
     }
 
@@ -190,9 +209,7 @@ class DriveGateway
         $service = $this->factory->makeDriveService($connection);
 
         /** @var ResponseInterface $response */
-        $response = $service->files->export($itemId, $mimeType, [
-            'supportsAllDrives' => true,
-        ]);
+        $response = $service->files->export($itemId, $mimeType);
 
         return $response;
     }

@@ -2,6 +2,18 @@
 
 return [
     'title' => 'Profile',
+    'page_title' => 'Profile Settings',
+    'breadcrumbs' => [
+        'home' => 'Home',
+        'section' => 'Profile',
+    ],
+    'summary' => [
+        'title' => 'Account Overview',
+        'subtitle' => 'Manage your account details, security settings, and connected Google accounts.',
+        'email_verified' => 'Email verified',
+        'email_unverified' => 'Email not verified',
+        'connected_accounts' => '{1} :count connected Google account|[2,*] :count connected Google accounts',
+    ],
     'sections' => [
         'account' => [
             'title' => 'Profile Information',

@@ -3,51 +3,52 @@
 return [
     'aside' => [
         'title' => 'Cloud Storage Gateway',
-        'text_html' => 'Birden fazla Google Drive hesabini baglayin<br />ve dosyalarinizi tek yerden yonetin.',
+        'text_html' => 'Birden fazla Google Drive hesabını bağlayın<br />ve dosyalarınızı tek yerden yönetin.',
     ],
 
     'fields' => [
         'name' => 'Ad Soyad',
         'email' => 'E-posta',
-        'password' => 'Sifre',
-        'password_confirmation' => 'Sifre (Tekrar)',
-        'remember' => 'Beni hatirla',
+        'password' => 'Şifre',
+        'password_confirmation' => 'Şifre (Tekrar)',
+        'remember' => 'Beni hatırla',
     ],
 
     'login' => [
-        'title' => 'Giris Yap',
-        'subtitle' => 'Storage gateway hesabina erisin',
-        'google' => 'Google ile giris yap',
+        'title' => 'Giriş Yap',
+        'subtitle' => 'Storage gateway hesabına erişin',
+        'google' => 'Google ile giriş yap',
         'or_email' => 'Veya e-posta ile',
-        'forgot_password' => 'Sifremi unuttum',
-        'submit' => 'Giris Yap',
-        'no_account' => 'Hesabin yok mu?',
-        'register_link' => 'Kayit ol',
+        'forgot_password' => 'Şifremi unuttum',
+        'submit' => 'Giriş Yap',
+        'no_account' => 'Hesabın yok mu?',
+        'register_link' => 'Kayıt ol',
     ],
 
     'register' => [
-        'title' => 'Kayit Ol',
-        'subtitle' => 'Hesabini olustur',
-        'google' => 'Google ile kayit ol',
+        'title' => 'Kayıt Ol',
+        'subtitle' => 'Hesabını oluştur',
+        'google' => 'Google ile kayıt ol',
         'or_email' => 'Veya e-posta ile',
-        'submit' => 'Hesap Olustur',
-        'have_account' => 'Zaten hesabin var mi?',
-        'login_link' => 'Giris yap',
+        'submit' => 'Hesap Oluştur',
+        'have_account' => 'Zaten hesabın var mı?',
+        'login_link' => 'Giriş yap',
         'messages' => [
-            'failed' => 'Kayit basarisiz. Lutfen tekrar deneyin.',
+            'failed' => 'Kayıt başarısız. Lütfen tekrar deneyin.',
         ],
     ],
 
     'forgot_password' => [
-        'title' => 'Sifremi Unuttum',
-        'subtitle' => 'Sifre sifirlama linki icin e-posta adresini gir.',
-        'submit' => 'Sifirlama Linki Gonder',
-        'back_to_login' => 'Giris sayfasina don',
+        'title' => 'Şifremi Unuttum',
+        'subtitle' => 'Şifre sıfırlama bağlantısı için e-posta adresini gir.',
+        'submit' => 'Sıfırlama Bağlantısı Gönder',
+        'back_to_login' => 'Giriş sayfasına dön',
     ],
 
     'reset_password' => [
-        'title' => 'Sifre Sifirla',
-        'subtitle' => 'Yeni sifreni belirle.',
-        'submit' => 'Sifreyi Sifirla',
+        'title' => 'Şifre Sıfırla',
+        'subtitle' => 'Yeni şifreni belirle.',
+        'submit' => 'Şifreyi Sıfırla',
     ],
 ];
+

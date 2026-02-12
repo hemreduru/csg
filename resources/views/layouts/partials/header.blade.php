@@ -11,6 +11,19 @@
     $userInitial = $authUser?->name
         ? mb_strtoupper(mb_substr($authUser->name, 0, 1))
         : __('ui.common.unknown_initial');
+
+    $locales = [
+        'en' => ['label' => __('ui.locale.en'), 'flag' => 'united-states.svg'],
+        'tr' => ['label' => __('ui.locale.tr'), 'flag' => 'turkey.svg'],
+    ];
+    $activeLocale = app()->getLocale();
+    if (! array_key_exists($activeLocale, $locales)) {
+        $activeLocale = 'en';
+    }
+    $orderedLocales = collect($locales)->sortBy(fn (array $meta) => mb_strtolower($meta['label']))->all();
+    $resolvedPageTitle = is_string($pageTitle ?? null) && trim((string) $pageTitle) !== ''
+        ? (string) $pageTitle
+        : config('app.name');
 @endphp
 
 <div id="kt_app_header" class="app-header" data-kt-sticky="true" data-kt-sticky-activate="{default: true, lg: true}"
@@ -28,24 +41,31 @@
             </div>
         </div>
 
-        <div class="d-flex align-items-center flex-grow-1 flex-lg-grow-0">
-            <a href="{{ route('drive.index') }}" class="d-lg-none">
+        <div class="d-flex align-items-center flex-grow-1 flex-lg-grow-1">
+            <a href="{{ route('drive.index') }}" class="d-lg-none me-3">
                 <img alt="{{ config('app.name') }}" src="{{ asset('assets/media/logos/default-small.svg') }}"
                     class="h-30px" />
             </a>
+
+            <div class="d-none d-lg-flex align-items-center">
+                <h1 class="fs-3 fw-bold text-gray-900 mb-0">{{ $resolvedPageTitle }}</h1>
+            </div>
         </div>
 
         <div class="d-flex align-items-stretch justify-content-between flex-lg-grow-1" id="kt_app_header_wrapper">
             <div class="d-flex align-items-center ms-auto">
                 <div class="app-navbar-item ms-1 ms-lg-3" id="kt_header_google_accounts_menu">
-                    <div class="btn btn-icon btn-custom btn-active-light btn-active-color-primary w-35px h-35px"
+                    <button type="button"
+                        class="btn btn-icon btn-custom btn-active-light btn-active-color-primary w-35px h-35px"
                         data-kt-menu-trigger="click" data-kt-menu-attach="parent"
                         data-kt-menu-placement="bottom-end">
-                        <i class="ki-duotone ki-google fs-2">
+                        <i class="ki-duotone ki-element-11 fs-2">
                             <span class="path1"></span>
                             <span class="path2"></span>
+                            <span class="path3"></span>
+                            <span class="path4"></span>
                         </i>
-                    </div>
+                    </button>
 
                     <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-semibold py-4 fs-6 w-325px"
                         data-kt-menu="true">
@@ -93,25 +113,37 @@
                 </div>
 
                 <div class="app-navbar-item ms-1 ms-lg-3" id="kt_header_language_menu">
-                    <div class="btn btn-icon btn-custom btn-active-light btn-active-color-primary w-35px h-35px"
+                    <button type="button"
+                        class="btn btn-flex align-items-center btn-custom btn-active-light btn-active-color-primary py-2 px-3"
                         data-kt-menu-trigger="click" data-kt-menu-attach="parent"
                         data-kt-menu-placement="bottom-end">
-                        <i class="ki-duotone ki-globe fs-2">
+                        <span class="symbol symbol-20px me-2">
+                            <img class="rounded-1"
+                                src="{{ asset('assets/media/flags/' . $locales[$activeLocale]['flag']) }}"
+                                alt="{{ $locales[$activeLocale]['label'] }}" />
+                        </span>
+                        <span class="fw-semibold fs-7 me-2">{{ strtoupper($activeLocale) }}</span>
+                        <i class="ki-duotone ki-black-left-line fs-5 m-0 rotate-270">
                             <span class="path1"></span>
                             <span class="path2"></span>
-                            <span class="path3"></span>
                         </i>
-                    </div>
+                    </button>
 
                     <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-semibold py-4 fs-6 w-200px"
                         data-kt-menu="true">
-                        @foreach (['en' => __('ui.locale.en'), 'tr' => __('ui.locale.tr')] as $locale => $label)
+                        @foreach ($orderedLocales as $locale => $meta)
                             <div class="menu-item px-3">
                                 <form method="POST" action="{{ route('locale.update') }}">
                                     @csrf
                                     <input type="hidden" name="locale" value="{{ $locale }}" />
-                                    <button type="submit" class="btn btn-link menu-link px-5 w-100 text-start">
-                                        {{ $label }}
+                                    <button type="submit"
+                                        class="btn btn-link menu-link d-flex align-items-center px-5 w-100 text-start">
+                                        <span class="symbol symbol-20px me-4">
+                                            <img class="rounded-1"
+                                                src="{{ asset('assets/media/flags/' . $meta['flag']) }}"
+                                                alt="{{ $meta['label'] }}" />
+                                        </span>
+                                        <span class="menu-title">{{ $meta['label'] }}</span>
                                         @if (app()->getLocale() === $locale)
                                             <span class="badge badge-light-success ms-2">{{ __('ui.common.active') }}</span>
                                         @endif
@@ -123,14 +155,21 @@
                 </div>
 
                 <div class="app-navbar-item ms-1 ms-lg-3" id="kt_header_user_menu">
-                    <div class="cursor-pointer symbol symbol-35px symbol-circle" data-kt-menu-trigger="click"
-                        data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
-                        <span class="symbol-label bg-light-primary text-primary fw-semibold">
-                            {{ $userInitial }}
+                    <div class="cursor-pointer d-flex align-items-center"
+                        data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-attach="parent"
+                        data-kt-menu-placement="bottom-end">
+                        <span class="symbol symbol-35px symbol-circle me-2">
+                            <span class="symbol-label bg-light-primary text-primary fw-semibold">
+                                {{ $userInitial }}
+                            </span>
                         </span>
+                        <i class="ki-duotone ki-black-left-line fs-5 m-0 rotate-270">
+                            <span class="path1"></span>
+                            <span class="path2"></span>
+                        </i>
                     </div>
 
-                    <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-semibold py-4 fs-6 w-275px"
+                    <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-semibold py-4 fs-6 w-300px"
                         data-kt-menu="true">
                         <div class="menu-item px-3">
                             <div class="menu-content d-flex align-items-center px-3">
@@ -152,7 +191,96 @@
                         <div class="separator my-2"></div>
 
                         <div class="menu-item px-5">
+                            <a href="{{ route('drive.index') }}" class="menu-link px-5">{{ __('ui.nav.drive') }}</a>
+                        </div>
+
+                        <div class="menu-item px-5">
+                            <a href="{{ route('connections.google.index') }}"
+                                class="menu-link px-5">{{ __('ui.nav.google_accounts') }}</a>
+                        </div>
+
+                        <div class="menu-item px-5">
                             <a href="{{ route('profile.edit') }}" class="menu-link px-5">{{ __('ui.nav.profile') }}</a>
+                        </div>
+
+                        <div class="separator my-2"></div>
+
+                        <div class="menu-item px-5" data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
+                            data-kt-menu-placement="left-start" data-kt-menu-offset="-15px, 0">
+                            <a href="#" class="menu-link px-5">
+                                <span class="menu-title position-relative">{{ __('ui.theme.title') }}
+                                    <span class="ms-5 position-absolute translate-middle-y top-50 end-0">
+                                        <i class="ki-duotone ki-night-day theme-light-show fs-2">
+                                            <span class="path1"></span>
+                                            <span class="path2"></span>
+                                            <span class="path3"></span>
+                                            <span class="path4"></span>
+                                            <span class="path5"></span>
+                                            <span class="path6"></span>
+                                            <span class="path7"></span>
+                                            <span class="path8"></span>
+                                            <span class="path9"></span>
+                                            <span class="path10"></span>
+                                        </i>
+                                        <i class="ki-duotone ki-moon theme-dark-show fs-2">
+                                            <span class="path1"></span>
+                                            <span class="path2"></span>
+                                        </i>
+                                    </span>
+                                </span>
+                            </a>
+
+                            <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-title-gray-700 menu-icon-gray-500 menu-active-bg menu-state-color fw-semibold py-4 fs-base w-175px"
+                                data-kt-menu="true" data-kt-element="theme-mode-menu">
+                                <div class="menu-item px-3 my-0">
+                                    <a href="#" class="menu-link px-3 py-2" data-kt-element="mode"
+                                        data-kt-value="light">
+                                        <span class="menu-icon" data-kt-element="icon">
+                                            <i class="ki-duotone ki-night-day fs-2">
+                                                <span class="path1"></span>
+                                                <span class="path2"></span>
+                                                <span class="path3"></span>
+                                                <span class="path4"></span>
+                                                <span class="path5"></span>
+                                                <span class="path6"></span>
+                                                <span class="path7"></span>
+                                                <span class="path8"></span>
+                                                <span class="path9"></span>
+                                                <span class="path10"></span>
+                                            </i>
+                                        </span>
+                                        <span class="menu-title">{{ __('ui.theme.light') }}</span>
+                                    </a>
+                                </div>
+
+                                <div class="menu-item px-3 my-0">
+                                    <a href="#" class="menu-link px-3 py-2" data-kt-element="mode"
+                                        data-kt-value="dark">
+                                        <span class="menu-icon" data-kt-element="icon">
+                                            <i class="ki-duotone ki-moon fs-2">
+                                                <span class="path1"></span>
+                                                <span class="path2"></span>
+                                            </i>
+                                        </span>
+                                        <span class="menu-title">{{ __('ui.theme.dark') }}</span>
+                                    </a>
+                                </div>
+
+                                <div class="menu-item px-3 my-0">
+                                    <a href="#" class="menu-link px-3 py-2" data-kt-element="mode"
+                                        data-kt-value="system">
+                                        <span class="menu-icon" data-kt-element="icon">
+                                            <i class="ki-duotone ki-screen fs-2">
+                                                <span class="path1"></span>
+                                                <span class="path2"></span>
+                                                <span class="path3"></span>
+                                                <span class="path4"></span>
+                                            </i>
+                                        </span>
+                                        <span class="menu-title">{{ __('ui.theme.system') }}</span>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="separator my-2"></div>

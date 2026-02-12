@@ -27,6 +27,12 @@ return [
         'en' => 'English',
         'tr' => 'Turkish',
     ],
+    'theme' => [
+        'title' => 'Theme Mode',
+        'light' => 'Light',
+        'dark' => 'Dark',
+        'system' => 'System',
+    ],
     'common' => [
         'active' => 'Active',
         'default' => 'Default',
