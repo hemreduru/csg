@@ -1,0 +1,77 @@
+<?php
+
+return [
+    'no_active_account' => 'No active Google account',
+    'no_connected_accounts' => 'No Google accounts connected.',
+    'manage_accounts' => 'Manage Google accounts',
+
+    'connections' => [
+        'title' => 'Google Accounts',
+        'add' => 'Add Google Account',
+        'set_default' => 'Set Default',
+        'disconnect' => 'Disconnect',
+        'rename' => 'Rename',
+        'name' => 'Name',
+        'email' => 'Email',
+        'status' => 'Status',
+        'default_badge' => 'Default',
+        'statuses' => [
+            'connected' => 'Connected',
+            'revoked' => 'Revoked',
+            'error' => 'Error',
+        ],
+        'connected' => 'Google account connected.',
+        'disconnected' => 'Google account disconnected.',
+        'default_set' => 'Default Google account updated.',
+        'renamed' => 'Google account renamed.',
+        'errors' => [
+            'connect_failed' => 'Google connection failed. Please try again.',
+            'update_failed' => 'Update failed. Please try again.',
+        ],
+    ],
+
+    'browse' => [
+        'title' => 'Drive',
+        'empty' => 'This folder is empty.',
+        'back' => 'Back',
+        'folder' => 'Folder',
+        'file' => 'File',
+        'modified' => 'Modified',
+        'size' => 'Size',
+        'actions' => 'Actions',
+        'open' => 'Open',
+        'new_folder' => 'New Folder',
+        'create_folder_title' => 'Create Folder',
+        'folder_name' => 'Folder name',
+        'create_folder_submit' => 'Create',
+        'upload' => 'Upload',
+        'upload_title' => 'Upload File',
+        'choose_file' => 'Choose file',
+        'upload_hint' => 'Max file size: 2 MB.',
+        'upload_submit' => 'Upload',
+        'download' => 'Download',
+        'rename' => 'Rename',
+        'rename_title' => 'Rename Item',
+        'new_name' => 'New name',
+        'delete' => 'Delete',
+        'confirm_delete' => 'Are you sure you want to delete this item?',
+        'na' => 'N/A',
+    ],
+
+    'messages' => [
+        'folder_created' => 'Folder created.',
+        'file_uploaded' => 'File uploaded.',
+        'item_renamed' => 'Item renamed.',
+        'item_trashed' => 'Item moved to trash.',
+    ],
+
+    'errors' => [
+        'list_failed' => 'Failed to load Drive items. Please try again.',
+        'create_folder_failed' => 'Failed to create folder. Please try again.',
+        'upload_failed' => 'Upload failed. Please try again.',
+        'rename_failed' => 'Rename failed. Please try again.',
+        'trash_failed' => 'Delete failed. Please try again.',
+        'download_failed' => 'Download failed. Please try again.',
+        'invalid_name' => 'Invalid name. Please try a different name.',
+    ],
+];

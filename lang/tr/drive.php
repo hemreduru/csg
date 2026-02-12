@@ -1,0 +1,77 @@
+<?php
+
+return [
+    'no_active_account' => 'Aktif Google hesabi yok',
+    'no_connected_accounts' => 'Bagli Google hesabi bulunamadi.',
+    'manage_accounts' => 'Google hesaplarini yonet',
+
+    'connections' => [
+        'title' => 'Google Hesaplari',
+        'add' => 'Google Hesabi Ekle',
+        'set_default' => 'Varsayilan Yap',
+        'disconnect' => 'Baglantiyi Kaldir',
+        'rename' => 'Yeniden Adlandir',
+        'name' => 'Ad',
+        'email' => 'E-posta',
+        'status' => 'Durum',
+        'default_badge' => 'Varsayilan',
+        'statuses' => [
+            'connected' => 'Bagli',
+            'revoked' => 'Iptal',
+            'error' => 'Hata',
+        ],
+        'connected' => 'Google hesabi baglandi.',
+        'disconnected' => 'Google hesabi baglantisi kaldirildi.',
+        'default_set' => 'Varsayilan Google hesabi guncellendi.',
+        'renamed' => 'Google hesabi yeniden adlandirildi.',
+        'errors' => [
+            'connect_failed' => 'Google baglantisi basarisiz. Lutfen tekrar deneyin.',
+            'update_failed' => 'Guncelleme basarisiz. Lutfen tekrar deneyin.',
+        ],
+    ],
+
+    'browse' => [
+        'title' => 'Drive',
+        'empty' => 'Bu klasor bos.',
+        'back' => 'Geri',
+        'folder' => 'Klasor',
+        'file' => 'Dosya',
+        'modified' => 'Guncelleme',
+        'size' => 'Boyut',
+        'actions' => 'Islemler',
+        'open' => 'Ac',
+        'new_folder' => 'Yeni Klasor',
+        'create_folder_title' => 'Klasor Olustur',
+        'folder_name' => 'Klasor adi',
+        'create_folder_submit' => 'Olustur',
+        'upload' => 'Yukle',
+        'upload_title' => 'Dosya Yukle',
+        'choose_file' => 'Dosya sec',
+        'upload_hint' => 'Maksimum dosya boyutu: 2 MB.',
+        'upload_submit' => 'Yukle',
+        'download' => 'Indir',
+        'rename' => 'Yeniden Adlandir',
+        'rename_title' => 'Yeniden Adlandir',
+        'new_name' => 'Yeni ad',
+        'delete' => 'Sil',
+        'confirm_delete' => 'Bu ogeyi silmek istiyor musun?',
+        'na' => 'Yok',
+    ],
+
+    'messages' => [
+        'folder_created' => 'Klasor olusturuldu.',
+        'file_uploaded' => 'Dosya yuklendi.',
+        'item_renamed' => 'Oge yeniden adlandirildi.',
+        'item_trashed' => 'Oge cope tasindi.',
+    ],
+
+    'errors' => [
+        'list_failed' => 'Drive icerigi yuklenemedi. Lutfen tekrar deneyin.',
+        'create_folder_failed' => 'Klasor olusturulamadi. Lutfen tekrar deneyin.',
+        'upload_failed' => 'Dosya yuklenemedi. Lutfen tekrar deneyin.',
+        'rename_failed' => 'Yeniden adlandirma basarisiz. Lutfen tekrar deneyin.',
+        'trash_failed' => 'Silme islemi basarisiz. Lutfen tekrar deneyin.',
+        'download_failed' => 'Indirme basarisiz. Lutfen tekrar deneyin.',
+        'invalid_name' => 'Gecersiz ad. Lutfen farkli bir ad deneyin.',
+    ],
+];
