@@ -4,6 +4,7 @@ namespace App\Services\GoogleDrive;
 
 use App\Models\DriveConnection;
 use App\Support\AppLog;
+use App\Support\DriveItemPresentation;
 use Exception;
 use Google\Service\Drive;
 use Google\Service\Drive\DriveFile;
@@ -28,6 +29,8 @@ class DriveGateway
      *   name: string,
      *   mime_type: string,
      *   is_folder: bool,
+     *   can_preview: bool,
+     *   icon_class: string,
      *   size: int|null,
      *   modified_time: string|null
      * }>
@@ -40,7 +43,7 @@ class DriveGateway
 
         $params = [
             'q' => "trashed = false and '{$folderId}' in parents",
-            'fields' => 'files(id,name,mimeType,size,modifiedTime)',
+            'fields' => 'files(id,name,mimeType,size,modifiedTime,webViewLink)',
             'pageSize' => 100,
             'supportsAllDrives' => true,
             'includeItemsFromAllDrives' => true,
@@ -54,12 +57,18 @@ class DriveGateway
         foreach ($results->getFiles() as $file) {
             $mime = (string) $file->getMimeType();
             $modified = $file->getModifiedTime();
+            $isFolder = $mime === self::FOLDER_MIME_TYPE;
+            $name = (string) $file->getName();
+            $webViewLink = $file->getWebViewLink();
+            $resolvedWebViewLink = is_string($webViewLink) && $webViewLink !== '' ? $webViewLink : null;
 
             $out[] = [
                 'id' => (string) $file->getId(),
-                'name' => (string) $file->getName(),
+                'name' => $name,
                 'mime_type' => $mime,
-                'is_folder' => $mime === self::FOLDER_MIME_TYPE,
+                'is_folder' => $isFolder,
+                'can_preview' => DriveItemPresentation::canPreview($mime, $resolvedWebViewLink),
+                'icon_class' => DriveItemPresentation::resolveIconClass($mime, $name, $isFolder),
                 'size' => $file->getSize() ? (int) $file->getSize() : null,
                 'modified_time' => $modified ? Carbon::parse($modified)->toDateTimeString() : null,
             ];

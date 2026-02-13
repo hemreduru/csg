@@ -312,6 +312,9 @@
                             $modified = $item['modified_time']
                                 ? \Illuminate\Support\Carbon::parse($item['modified_time'])->format('d.m.Y H:i')
                                 : __('drive.browse.na');
+                            $canPreview = (bool) ($item['can_preview'] ?? false);
+                            $iconClass = (string) ($item['icon_class'] ?? '');
+                            $isDuotoneIcon = \Illuminate\Support\Str::startsWith($iconClass, 'ki-duotone');
                         @endphp
 
                         <tr data-kt-filemanager-row data-name="{{ \Illuminate\Support\Str::lower($item['name']) }}">
@@ -324,11 +327,14 @@
                             <td data-order="{{ \Illuminate\Support\Str::lower($item['name']) }}">
                                 <div class="d-flex align-items-center">
                                     <span class="icon-wrapper">
-                                        <i
-                                            class="ki-duotone {{ $item['is_folder'] ? 'ki-folder' : 'ki-file' }} fs-2x {{ $item['is_folder'] ? 'text-primary' : 'text-gray-700' }} me-4">
-                                            <span class="path1"></span>
-                                            <span class="path2"></span>
-                                        </i>
+                                        @if ($isDuotoneIcon)
+                                            <i class="{{ $iconClass }}">
+                                                <span class="path1"></span>
+                                                <span class="path2"></span>
+                                            </i>
+                                        @else
+                                            <i class="{{ $iconClass !== '' ? $iconClass : 'la la-file-o fs-2x text-gray-700 me-4' }}"></i>
+                                        @endif
                                     </span>
 
                                     @if ($item['is_folder'])
@@ -352,7 +358,7 @@
                                                     <span class="path2"></span>
                                                 </i>
                                             </a>
-                                        @else
+                                        @elseif ($canPreview)
                                             <a href="{{ route('drive.items.preview', [$activeDriveConnection, $item['id'], 'path' => $path]) }}"
                                                 target="_blank" rel="noopener"
                                                 class="btn btn-sm btn-icon btn-light btn-active-light-primary">
@@ -361,6 +367,12 @@
                                                     <span class="path2"></span>
                                                     <span class="path3"></span>
                                                 </i>
+                                            </a>
+                                        @else
+                                            <a href="{{ route('drive.items.download', [$activeDriveConnection, $item['id']]) }}"
+                                                target="_blank" rel="noopener"
+                                                class="btn btn-sm btn-icon btn-light btn-active-light-primary">
+                                                <i class="la la-download fs-4 m-0"></i>
                                             </a>
                                         @endif
                                     </div>
@@ -383,13 +395,16 @@
                                                 @if ($item['is_folder'])
                                                     <a href="{{ route('drive.browse', [$activeDriveConnection, 'path' => $itemPath]) }}"
                                                         class="menu-link px-3">{{ __('drive.browse.open') }}</a>
-                                                @else
+                                                @elseif ($canPreview)
                                                     <a href="{{ route('drive.items.preview', [$activeDriveConnection, $item['id'], 'path' => $path]) }}"
                                                         target="_blank" rel="noopener"
                                                         class="menu-link px-3">{{ __('drive.browse.preview') }}</a>
+                                                @else
+                                                    <a href="{{ route('drive.items.download', [$activeDriveConnection, $item['id']]) }}"
+                                                        class="menu-link px-3">{{ __('drive.browse.download') }}</a>
                                                 @endif
                                             </div>
-                                            @if (! $item['is_folder'])
+                                            @if (! $item['is_folder'] && $canPreview)
                                                 <div class="menu-item px-3">
                                                     <a href="{{ route('drive.items.download', [$activeDriveConnection, $item['id']]) }}"
                                                         class="menu-link px-3">{{ __('drive.browse.download') }}</a>

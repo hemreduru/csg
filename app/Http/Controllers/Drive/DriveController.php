@@ -12,6 +12,7 @@ use App\Models\DriveConnection;
 use App\Services\GoogleDrive\DriveGateway;
 use App\Support\AppLog;
 use App\Support\DriveNameSanitizer;
+use App\Support\DriveItemPresentation;
 use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -291,24 +292,42 @@ class DriveController extends Controller
         try {
             $meta = $gateway->getMetadata($connection, $itemId);
             $mimeType = (string) ($meta['mime_type'] ?? '');
+            $webViewLink = is_string($meta['web_view_link'] ?? null) ? (string) $meta['web_view_link'] : null;
 
             if ($mimeType === DriveGateway::FOLDER_MIME_TYPE) {
                 return redirect()->route('drive.browse', [$connection, 'path' => $fallbackPath])
                     ->with('error', __('drive.errors.preview_folder_not_supported'));
             }
 
+            if (! DriveItemPresentation::canPreview($mimeType, $webViewLink)) {
+                return redirect()->route('drive.items.download', [$connection, $itemId]);
+            }
+
             $name = $this->sanitizeOutputName((string) ($meta['name'] ?? ''));
 
             if (str_starts_with($mimeType, DriveGateway::GOOGLE_APPS_MIME_PREFIX)) {
                 $exportMimeType = $this->resolvePreviewExportMimeType($meta['export_links'] ?? []);
+                $response = null;
+                $contentType = null;
+                $previewName = null;
 
                 if ($exportMimeType !== null) {
-                    $response = $gateway->exportFile($connection, $itemId, $exportMimeType);
-                    $contentType = $exportMimeType;
-                    $previewName = $this->appendExtensionByMimeType($name, $exportMimeType);
-                } else {
-                    $webViewLink = $meta['web_view_link'] ?? null;
+                    try {
+                        $response = $gateway->exportFile($connection, $itemId, $exportMimeType);
+                        $contentType = $exportMimeType;
+                        $previewName = $this->appendExtensionByMimeType($name, $exportMimeType);
+                    } catch (Exception $exportException) {
+                        AppLog::warning('Drive preview export failed, trying Google viewer fallback', [
+                            'user_id' => $request->user()?->id,
+                            'drive_connection_id' => $connection->id,
+                            'item_id' => $itemId,
+                            'mime_type' => $mimeType,
+                            'export_mime_type' => $exportMimeType,
+                        ], $exportException);
+                    }
+                }
 
+                if (! $response) {
                     if (is_string($webViewLink) && $webViewLink !== '') {
                         AppLog::info('Drive preview redirected to Google viewer', [
                             'user_id' => $request->user()?->id,
@@ -321,10 +340,21 @@ class DriveController extends Controller
                         return redirect()->away($webViewLink);
                     }
 
-                    return redirect()->route('drive.browse', [$connection, 'path' => $fallbackPath])
-                        ->with('error', __('drive.errors.preview_failed'));
+                    return redirect()->route('drive.items.download', [$connection, $itemId]);
                 }
             } else {
+                if (DriveItemPresentation::shouldUseGoogleViewer($mimeType, $webViewLink)) {
+                    AppLog::info('Drive preview redirected to Google viewer', [
+                        'user_id' => $request->user()?->id,
+                        'drive_connection_id' => $connection->id,
+                        'item_id' => $itemId,
+                        'mime_type' => $mimeType,
+                        'web_view_link' => $webViewLink,
+                    ]);
+
+                    return redirect()->away($webViewLink);
+                }
+
                 $response = $gateway->downloadFile($connection, $itemId);
                 $contentType = $mimeType !== '' ? $mimeType : 'application/octet-stream';
                 $previewName = $name;
